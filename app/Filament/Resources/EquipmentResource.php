@@ -13,6 +13,8 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Section;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class EquipmentResource extends Resource
 {
@@ -23,6 +25,13 @@ class EquipmentResource extends Resource
     protected static ?string $navigationLabel = 'Skates & Gears';
 
     protected static ?string $navigationIcon = 'heroicon-o-archive-box';
+
+    public static function canCreate(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User && $user->isAdmin();
+    }
 
     public static function form(Form $form): Form
     {

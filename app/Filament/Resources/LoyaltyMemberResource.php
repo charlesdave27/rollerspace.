@@ -14,6 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Enums\PaginationMode;
 use Filament\Forms\Components\Section;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class LoyaltyMemberResource extends Resource
 {
@@ -21,6 +23,13 @@ class LoyaltyMemberResource extends Resource
     protected static ?int $navigationSort = 5;
 
     protected static ?string $navigationIcon = 'heroicon-o-star';
+
+    public static function canCreate(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User && ($user->isAdmin() || $user->isStaff());
+    }
 
     public static function form(Form $form): Form
     {

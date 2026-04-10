@@ -20,6 +20,8 @@ use Carbon\Carbon;
 use App\Exports\RevenueReportExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Filament\Notifications\Notification;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ReportResource extends Resource
 {
@@ -28,6 +30,13 @@ class ReportResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
     protected static ?string $navigationLabel = 'Revenue Reports';
     protected static ?string $modelLabel = 'Report';
+
+    public static function canCreate(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User && $user->isAdmin();
+    }
 
     public static function form(Form $form): Form
     {

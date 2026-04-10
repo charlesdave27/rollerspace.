@@ -24,6 +24,8 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\View;
 use Filament\Tables\Actions\Action;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class RentalManagementResource extends Resource
 {
@@ -33,6 +35,13 @@ class RentalManagementResource extends Resource
 
     protected static ?string $navigationLabel = 'Active Rentals';
     protected static ?string $navigationIcon = 'heroicon-o-clock';
+
+    public static function canCreate(): bool
+    {
+        $user = Auth::user();
+
+        return $user instanceof User && ($user->isAdmin() || $user->isStaff());
+    }
 
     public static function form(Form $form): Form
     {
